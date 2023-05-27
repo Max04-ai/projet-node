@@ -10,15 +10,10 @@ const platSchema = new mongoose.Schema(
         type: [String],
         required: true,
       },   
-    //  entree : {
-    //    type : String,
-    //},
-    //dessert : {
-    //    type : String,
-    //},
-    commandes: {
+ 
+    menus: {
         type : mongoose.Schema.Types.ObjectId,
-        required: true
+        ref : "menu"
     }
        
 });
@@ -72,9 +67,8 @@ const userSchema = new mongoose.Schema(
         },     
         role: {
             type: Number,
-            required: true
-           // enum: ['user', 'admin','client'],
-           // default: 'user'
+            required: true,
+            enum: ['user', 'admin','client']
         },
         created_at: {
             type: Date,
@@ -128,11 +122,11 @@ const commandeSchema = new mongoose.Schema(
             type: String,
             required: true
         },
-        plat_jour:{
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Commande",
-          required:true
-        },
+      //  plat_jour:{
+      //    type: mongoose.Schema.Types.ObjectId,
+      //    ref: "Commande",
+      //    required:true
+      //  },
         created_at: {
             type: Date,
             default: Date.now
@@ -140,19 +134,26 @@ const commandeSchema = new mongoose.Schema(
    //     prix_total:{
    //         type: Number,
    //     },
-        users :{
-           type : String,
-           required: true
-        }
-     //   clients: [
-     //       {
-     //         type: mongoose.Schema.Types.ObjectId,
-     //         ref: "Client"
-     //       }
-     //   ]
+
+         clients: 
+           {
+             type: mongoose.Schema.Types.ObjectId,
+             ref: "Client"
+            }
+        
 }
 )
 const Commande = mongoose.model('Commande', commandeSchema);
 module.exports = Commande;
 
+const commandePlat = new mongoose.Schema(
+    {
+      commandes :{ type: mongoose.Schema.Types.ObjectId, ref: 'Commande' },
+      plats :{ type: mongoose.Schema.Types.ObjectId, ref: 'Plat' },
+  
+  })
+  
+  const CommandePlat = mongoose.model('CommandePlat', commandePlat);
+  
+  module.exports = CommandePlat;
 

@@ -56,6 +56,24 @@ exports.updatebyID = async(req ,res) =>{
 }
 
 
+// delete menu
+exports.deleteById = async(req ,res) =>{
+    try{
+       const {id} = req.params;
+       const commande = await Commande.findByIdAndDelete(id);
+       if(!commande){
+        return res.status(404).json({message : 'Commande non trouvé'})
+    }
+    //  const updatePost = await Post.findById(id);
+      res.status(200).json(commande);
+      console.log("Commande supprimé avec succès");
+  }catch(error){
+         res.status(500).json({message : error.message})
+   }
+} 
+  
+
+
 
 
 
