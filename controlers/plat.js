@@ -1,33 +1,13 @@
-const Plat = require("../models/model");
-/**
- * @desc    Create Food
- * @route   POST /api/v1/plat/:id
- * @access  Private/Client
- */
-exports.createPlat = async (req, res, next) => {
+const Plat = require("../models/plat");
+
+
+exports.createPlat = async (req, res) => {
   const plat = await Plat.create(req.body);
   
   res.status(201).json({ success: true, data: plat });
 }
-
-//exports.createPlat = (req,res) => {
-//const plat = new Plat(req.body);   
-//plat.save().then(result => {
-  
-//   return res.status(200).json({
-//    plat : result 
-//   })
-//   })
-//}
-
-/**
- * @desc    Get Food
- * @route   GET /api/v1/plats
- * @access  Private/Client
- */
-
 exports.getPlats = (req , res)  => {
-  const plat = Plat.find().select
+  const plat = Plat.find()
   .then((plat) => {
     res.status(200).json({plat});
   })     
@@ -73,6 +53,22 @@ exports.deleteById = async(req ,res) =>{
        res.status(500).json({message : error.message})
  }
 } 
+
+exports.updatebyID = async(req ,res) =>{
+  try{
+    const {id} = req.params;
+    const plat = await Plat.findByIdAndUpdate(id, req.body, { new: true });
+     if(!plat){
+     return res.status(404).json({message : 'Plat introuvable'})
+  }
+  const updatePlat = await Plat.findById(id);
+  res.status(200).json(updatePlat);
+  console.log("Plat modifié avec succès");
+}catch(error){
+      res.status(500).json({message : error.message})
+   }
+}
+
    // if(err){
   //  return res.status(400).json({
   //    error : err

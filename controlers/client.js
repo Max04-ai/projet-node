@@ -1,4 +1,4 @@
-const Client = require("../models/model");
+const Client = require("../models/commande");
 
 // Create a client
 exports.createClient = (req,res) => {
@@ -25,7 +25,7 @@ exports.getClientbyID =  async (req, res) => {
 
 // Get clients
 exports.getClients = (req, res) => {
-    const commandes = Commande.find()
+    const client = Client.find()
     .then((commandes) => {
         res.status(200).json
     })
@@ -47,3 +47,18 @@ exports.deleteClient = async (req ,res)=> {
           res.status(500).json({message : error.message})
     }
 }
+
+exports.updatebyID = async(req ,res) =>{
+    try{
+      const {id} = req.params;
+      const client = await Client.findByIdAndUpdate(id, req.body);
+       if(!client){
+       return res.status(404).json({message : 'Client introuvable'})
+    }
+    const updateClient = await Client.findById(id);
+    res.status(200).json(updateClient);
+    console.log("Client modifié avec succès");
+  }catch(error){
+        res.status(500).json({message : error.message})
+     }
+  }

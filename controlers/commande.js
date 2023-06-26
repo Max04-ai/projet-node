@@ -1,20 +1,24 @@
-const Commande = require("../models/model");
+const Commande = require("../models/commande");
 
-//  Get commande
-exports.getCommande = (req,res) => {
-    const commandes = Commande.find()
-    .then((commandes) => {
-        res.status(200).json
-    })
-    .catch(err => console.log("Erreur"));
-}
+// Récupérer toutes les commandes
+exports.getAllCommandes = async (req, res) => {
+    try {
+      // Récupérer toutes les commandes de la base de données
+      const commandes = await Commande.find().populate('clients', 'nom email');
+  
+      res.status(200).json(commandes);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Une erreur est survenue lors de la récupération des commandes' });
+    }
+  };
 
 // Create commande
 exports.createCommande = async (req, res) => {
-    const commande = await Commande.create(req.body);
+   const commande = await Commande.create(req.body);
     
     res.status(201).json({ success: true, data: commande });
-  }
+};
   
 //exports.createCommande = (req,res) => {
 //    const commande = new Commande(req.body);
@@ -43,7 +47,7 @@ exports.getCommandebyId = async (req, res) => {
 exports.updatebyID = async(req ,res) =>{
   try{
     const {id} = req.params;
-    const commande = await Commande.findByIdAndUpdate(id, req.body);
+    const commande = await Commande.findByIdAndUpdate(id, req.body,  { new: true });
      if(!commande){
      return res.status(404).json({message : 'Commande introuvable'})
   }
